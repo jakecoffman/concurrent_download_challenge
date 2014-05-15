@@ -24,13 +24,13 @@ func main() {
 		go count(item, c)
 	}
 
-	timeout := time.After(500 * time.Second)
+	timeout := time.After(500 * time.Millisecond)
 	for i := 0; i < len(items); i++ {
 		select {
 		case result := <-c:
 			fmt.Print(result)
 		case <-timeout:
-			fmt.Print("Timed out\n")
+			fmt.Printf("Total time: %.5fs\n", time.Since(start).Seconds())
 			return
 		}
 	}
