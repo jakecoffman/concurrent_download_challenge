@@ -11,6 +11,7 @@ urls_to_load = [
     "http://golang.org",
 ]
 
+
 limit = .5  # seconds
 
 
@@ -32,8 +33,8 @@ def fetch_parallel():
         if p.is_alive():
             p.terminate()
         if not queue.empty():
-            print "%s %d [%.2fs]" % queue.get()
-    print "Total time: %.2fs" % (time.time() - start)
+            print "%s %d [%.4fs]" % queue.get()
+    print "Total time: %.4fs" % (time.time() - start)
 
 
 if __name__ == "__main__":

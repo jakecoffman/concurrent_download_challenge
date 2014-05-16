@@ -10,6 +10,9 @@ import (
 
 func main() {
 	start := time.Now()
+	defer func() {
+		fmt.Printf("Total time: %.4fs\n", time.Since(start).Seconds())
+	}()
 
 	items := []string{
 		"http://google.com",
@@ -25,28 +28,27 @@ func main() {
 	}
 
 	timeout := time.After(500 * time.Millisecond)
-	for i := 0; i < len(items); i++ {
+	for _ = range items {
 		select {
 		case result := <-c:
 			fmt.Print(result)
 		case <-timeout:
-			fmt.Printf("Total time: %.5fs\n", time.Since(start).Seconds())
 			return
 		}
 	}
-
-	fmt.Printf("Total time: %.2fs\n", time.Since(start).Seconds())
 }
 
 func count(url string, c chan<- string) {
 	start := time.Now()
 	r, err := http.Get(url)
 	if err != nil {
-		c <- fmt.Sprintf("%s: %s\n", url, err)
-		return
+		panic(err)
 	}
-	n, _ := io.Copy(ioutil.Discard, r.Body)
+	n, err := io.Copy(ioutil.Discard, r.Body)
+	if err != nil {
+		panic(err)
+	}
 	r.Body.Close()
 	dt := time.Since(start).Seconds()
-	c <- fmt.Sprintf("%s %d [%.2fs]\n", url, n, dt)
+	c <- fmt.Sprintf("%s %d [%.4fs]\n", url, n, dt)
 }
