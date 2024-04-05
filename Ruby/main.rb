@@ -13,7 +13,7 @@ def fetch(url)
     uri = URI(url)
     response = Net::HTTP.get_response(uri)
     if response.code == '301' || response.code == '302'
-      url = URI(response['location'])
+      url = response['location']
       next
     end
     return response
