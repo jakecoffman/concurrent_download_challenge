@@ -1,4 +1,4 @@
-import multiprocessing
+from queue import Queue
 import threading
 from urllib.request import urlopen
 import time
@@ -24,7 +24,7 @@ def read_url(url, q):
 
 def fetch_parallel():
     start = time.time()
-    queue = multiprocessing.Queue()
+    queue = Queue()
     threads = [threading.Thread(target=read_url, args=(url, queue)) for url in urls_to_load]
     for t in threads:
         t.start()
